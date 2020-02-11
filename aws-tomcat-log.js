@@ -1,7 +1,10 @@
 "use strict";
-
 const fs = require("fs");
 const path = require("path");
+const stream = require("stream");
+const util = require("util");
+const pipeline = util.promisify(stream.pipeline);
+const zlib = require("zlib");
 const program = require("commander");
 const repl = require("repl");
 
@@ -16,9 +19,11 @@ program
 		"file with any of its rotated daily logs in chronological order.\n\n" +
 		HELP)
 	.option("--f <fn>", "Catalina daily log file to ls() or join()")
+	.option("--fout <fn>", "File name of joined output file")
 	.parse(process.argv);
 
 if (!program.f) program.f = "/Users/klin/Downloads/var/log/tomcat8/catalina.2020-01-25.log";
+if (!program.out) program.out = "out.log";
 
 var replServer = repl.start({prompt: "> "});
 
@@ -27,8 +32,11 @@ replServer.context.help	= function() {
 };
 
 replServer.context.ls = function(f) {
-	var ret = [];
+	var logs = [];	// Ordered array of log files (rotated files has .gz extension)
 
+	if (typeof f === "undefined") {
+		f = program.f;
+	}
 	if (fs.existsSync(f)) {
 		let p = path.parse(f);
 		const base = p.base;
@@ -36,7 +44,7 @@ replServer.context.ls = function(f) {
 		// Get rotated subdir name
 		let subdir = path.format({dir: p.dir + path.sep + "rotated"});
 		if (subdir.endsWith(path.sep)) {	// Remove trailing /
-			subdir = subdir.substr(0, subdir.length - path.sep.length);
+			subdir = subdir.substring(0, subdir.length - path.sep.length);
 		}
 
 		// Get corresponding .gz files in rotated subdirectory
@@ -45,23 +53,54 @@ replServer.context.ls = function(f) {
 		while (dirent) {
 			let p = path.parse(dirent.name);
 			if (dirent.name.startsWith(base) && p.ext === ".gz") {
-				ret.push(path.format({dir: subdir, base: dirent.name}));
+				logs.push(path.format({dir: subdir, base: dirent.name}));
 			}
 			dirent = dir.readSync();
 		}
 		dir.close();
 
 		// Return rotated .gz files first, then f
-		ret.sort();
-		ret.push(f);
+		logs.sort();
+		logs.push(f);
 	}
 
-	return ret;
+	return logs;
 };
 
+// https://nodejs.org/api/stream.html#stream_stream_pipeline_streams_callback
+async function unzipSync(f, write) {
+	await pipeline(
+		fs.createReadStream(f),
+		zlib.createGunzip(),
+		write
+	);
+	console.log('Pipeline succeeded for ' + f);
+}
+
+replServer.context.join = function(f, out) {
+	if (typeof out === "undefined") {
+		out = program.out;
+	}
+	
+	const logs = replServer.context.ls(f);
+	const write = fs.createWriteStream(out);
+
+	logs.forEach(f => {
+		const p = path.parse(f);
+		if (p.ext === ".gz") {
+console.log("UNZIPPING " + f);
+			unzipSync(f, write).catch(console.error);
+		} else {
+			console.log(f);
+		}
+	});
+
+	return logs;
+};
+	
 if (program.f) {
-	const ret = replServer.context.ls(program.f);
-	console.log("ls " + JSON.stringify(ret, null, 2));
+	const logs = replServer.context.join(program.f);
+//	console.log("ls " + JSON.stringify(logs, null, 2));
 }
 
 process.on('exit', function(code) {  
