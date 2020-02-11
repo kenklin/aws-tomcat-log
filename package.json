@@ -1,0 +1,27 @@
+{
+  "name": "aws-tomcat-log",
+  "description": "aws-tomcat-log",
+  "version": "0.0.1",
+  "main": "./aws-eb-tomcat-log.js",
+  "author": "Ken Lin <github.kenklin@kenlin.com>",
+  "keywords": [],
+  "licenses": {
+    "type": "none"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/YOUR_LOGIN/ermon-csv-lint.git"
+  },
+  "bugs": {
+    "url": "http://github.com/YOUR_LOGIN/ermon-csv-lint/issues"
+  },
+  "dependencies": {
+    "commander": "^4.1.1"
+  },
+  "homepage": "https://github.com/YOUR_LOGIN/ermon-csv-lint#readme",
+  "scripts": {
+    "start": "node aws-tomcat-log",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "license": "ISC"
+}
