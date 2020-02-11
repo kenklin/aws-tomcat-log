@@ -19,11 +19,16 @@ program
 		"file with any of its rotated daily logs in chronological order.\n\n" +
 		HELP)
 	.option("--f <fn>", "Catalina daily log file to ls() or join()")
-	.option("--fout <fn>", "File name of joined output file")
+	.option("--out <fn>", "File name of joined output file")
+	.option("--quiet")
 	.parse(process.argv);
 
 if (!program.f) program.f = "/Users/klin/Downloads/var/log/tomcat8/catalina.2020-01-25.log";
-if (!program.out) program.out = "out.log";
+
+if (!program.out) {
+	const p = path.parse(program.f);
+	program.out = path.format({dir: p.dir, name: p.name, ext: ".out"});
+}
 
 var replServer = repl.start({prompt: "> "});
 
@@ -67,6 +72,7 @@ replServer.context.ls = function(f) {
 	return logs;
 };
 
+/*
 // https://nodejs.org/api/stream.html#stream_stream_pipeline_streams_callback
 async function unzipSync(f, write) {
 	await pipeline(
@@ -76,6 +82,7 @@ async function unzipSync(f, write) {
 	);
 	console.log('Pipeline succeeded for ' + f);
 }
+*/
 
 replServer.context.join = function(f, out) {
 	if (typeof out === "undefined") {
@@ -87,12 +94,14 @@ replServer.context.join = function(f, out) {
 
 	logs.forEach(f => {
 		const p = path.parse(f);
+		var contents = fs.readFileSync(f);
 		if (p.ext === ".gz") {
-console.log("UNZIPPING " + f);
-			unzipSync(f, write).catch(console.error);
-		} else {
-			console.log(f);
+			if (!program.quiet) console.log("joining unzipped " + f);
+			contents = zlib.gunzipSync(contents);
+		} else { 
+			if (!program.quiet) console.log("joining " + f);
 		}
+		fs.appendFileSync(out, contents);
 	});
 
 	return logs;
@@ -100,7 +109,6 @@ console.log("UNZIPPING " + f);
 	
 if (program.f) {
 	const logs = replServer.context.join(program.f);
-//	console.log("ls " + JSON.stringify(logs, null, 2));
 }
 
 process.on('exit', function(code) {  
