@@ -11,7 +11,7 @@ const repl = require("repl");
 const VERSION = "0.0.1";
 const HELP = "Commands are:\n" +
 	"  ls(f)   - Lists f and its rotated gzipped log files without unzipping the latter.\n" +
-	"  join(f) - Joins f and its rotated gzipped log files after unzipping the latter.";
+	"  join(f,out) - Joins f and its rotated gzipped log files after unzipping the latter.";
 
 program
 	.version(VERSION)
@@ -23,9 +23,9 @@ program
 	.option("--quiet")
 	.parse(process.argv);
 
-if (!program.f) program.f = "/Users/klin/Downloads/var/log/tomcat8/catalina.2020-01-25.log";
+//if (!program.f) program.f = "/Users/klin/Downloads/var/log/tomcat8/catalina.2020-01-25.log";
 
-if (!program.out) {
+if (program.f && !program.out) {
 	const p = path.parse(program.f);
 	program.out = path.format({dir: p.dir, name: p.name, ext: ".out"});
 }
