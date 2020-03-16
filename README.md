@@ -4,6 +4,7 @@ The **aws-tomcat-log** REPL joins an AWS Tomcat Elastic Beanstalk daily
 catalina.out log file with any of that day's rotated logs in chronological
 order to create one complete daily log file.
 
+The interactive and single-command examples below show our interest in the 2020-01-25 logs.
 ## Interactive
 ```
 klin@Kens-MacBook-Pro:aws-tomcat-log$ node aws-tomcat-log
