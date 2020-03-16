@@ -8,6 +8,13 @@ const zlib = require("zlib");
 const program = require("commander");
 const repl = require("repl");
 
+// fs.opendirSync first appeared in Node 12
+const NODE_VERSION = process.versions.node;	// e.g. "11.0.0", "13.0.0"
+const NODE_MAJOR_VERSION = NODE_VERSION.split(".")[0];
+if (+NODE_MAJOR_VERSION < 12) {
+	throw new Error("Requires Node 12 or higher for fs.opendirSync.  Try 'nvm use 13'");
+}
+
 const VERSION = "0.0.1";
 const HELP = "Commands are:\n" +
 	"  ls(f)   - Lists f and its rotated gzipped log files without unzipping the latter.\n" +
