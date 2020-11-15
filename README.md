@@ -64,3 +64,29 @@ joining unzipped /Users/klin/Downloads/var/log/tomcat8/rotated/catalina.2020-01-
 joining unzipped /Users/klin/Downloads/var/log/tomcat8/rotated/catalina.2020-01-25.log1579996861.gz
 joining /Users/klin/Downloads/var/log/tomcat8/catalina.2020-01-25.log
 ```
+
+11/14/2020 IMSA Sebring 12 IWSC Race: The rotated log files are incomplete; earlier ERMon is missing.
+```
+klin@Kens-MacBook-Pro:aws-tomcat-log$ node aws-tomcat-log --f ~/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/catalina.2020-11-14.log --out 2020-11-14.log
+> joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-14.log1605384061.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-14.log1605387661.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-14.log1605391261.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-14.log1605394861.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-14.log1605398461.gz
+joining /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/catalina.2020-11-14.log
+
+(To exit, press ^C again or ^D or type .exit)
+> 
+Exit with code 0
+klin@Kens-MacBook-Pro:aws-tomcat-log$ node aws-tomcat-log --f ~/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/catalina.2020-11-15.log --out 2020-11-15.log
+> joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-15.log1605398461.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-15.log1605402062.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-15.log1605405662.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-15.log1605409261.gz
+joining unzipped /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/rotated/catalina.2020-11-15.log1605412861.gz
+joining /Users/klin/Documents/p1software-documents/catalina-2020-11-14/log/tomcat8/catalina.2020-11-15.log
+
+(To exit, press ^C again or ^D or type .exit)
+> 
+Exit with code 0
+```
